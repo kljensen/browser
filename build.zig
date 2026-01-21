@@ -624,6 +624,7 @@ fn buildCurl(b: *Build, m: *Build.Module) !void {
             root ++ "lib/httpsrr.c",
             root ++ "lib/idn.c",
             root ++ "lib/if2ip.c",
+            root ++ "lib/impersonate.c",
             root ++ "lib/imap.c",
             root ++ "lib/krb5.c",
             root ++ "lib/ldap.c",

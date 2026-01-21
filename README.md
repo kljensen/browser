@@ -140,7 +140,7 @@ You may still encounter errors or crashes. Please open an issue with specifics i
 
 Here are the key features we have implemented:
 
-- [x] HTTP loader ([Libcurl](https://curl.se/libcurl/))
+- [x] HTTP loader with browser fingerprinting ([curl-impersonate](https://github.com/lwthiker/curl-impersonate))
 - [x] HTML parser ([html5ever](https://github.com/servo/html5ever))
 - [x] DOM tree
 - [x] Javascript support ([v8](https://v8.dev/))
@@ -156,10 +156,20 @@ Here are the key features we have implemented:
 - [x] Custom HTTP headers
 - [x] Proxy support
 - [x] Network interception
+- [x] Browser fingerprinting (TLS/HTTP2 impersonation)
 
 NOTE: There are hundreds of Web APIs. Developing a browser (even just for headless mode) is a huge task. Coverage will increase over time.
 
 You can also follow the progress of our Javascript support in our dedicated [zig-js-runtime](https://github.com/lightpanda-io/zig-js-runtime#development) project.
+
+### Browser Fingerprinting
+
+Lightpanda uses [curl-impersonate](https://github.com/lwthiker/curl-impersonate) to make its HTTP connections appear identical to those made by Chrome 116. This includes:
+
+- **TLS Fingerprinting**: The TLS handshake (Client Hello message, cipher suites, extensions) matches Chrome's exactly
+- **HTTP/2 Fingerprinting**: HTTP/2 settings and headers are configured to match Chrome's behavior
+
+This helps avoid detection and blocking by websites that use TLS fingerprinting techniques to identify non-browser clients.
 
 ## Build from sources
 
@@ -170,7 +180,11 @@ install it with the right version in order to build the project.
 
 Lightpanda also depends on
 [zig-js-runtime](https://github.com/lightpanda-io/zig-js-runtime/) (with v8),
-[Libcurl](https://curl.se/libcurl/) and [html5ever](https://github.com/servo/html5ever).
+[curl-impersonate](https://github.com/lwthiker/curl-impersonate) and [html5ever](https://github.com/servo/html5ever).
+
+curl-impersonate is a special build of curl that can impersonate Chrome, Edge, Safari & Firefox browsers. 
+This allows Lightpanda to perform TLS and HTTP handshakes that are identical to real browsers, avoiding 
+TLS fingerprinting and making web scraping more reliable.
 
 To be able to build the v8 engine for zig-js-runtime, you have to install some libs:
 
