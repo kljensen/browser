@@ -121,6 +121,10 @@ pub const Connection = struct {
         const easy = c.curl_easy_init() orelse return error.FailedToInitializeEasy;
         errdefer _ = c.curl_easy_cleanup(easy);
 
+        // Enable browser impersonation to look like Chrome 116
+        // This sets up TLS and HTTP/2 fingerprints to match a real browser
+        try errorCheck(c.curl_easy_impersonate(easy, "chrome116", 0));
+
         // timeouts
         try errorCheck(c.curl_easy_setopt(easy, c.CURLOPT_TIMEOUT_MS, @as(c_long, @intCast(opts.timeout_ms))));
         try errorCheck(c.curl_easy_setopt(easy, c.CURLOPT_CONNECTTIMEOUT_MS, @as(c_long, @intCast(opts.connect_timeout_ms))));
